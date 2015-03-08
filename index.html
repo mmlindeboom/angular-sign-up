@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="App" class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Trips</title>
+
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="public/css/trips.css">
+	</head>
+
+	<body>
+		<div ng-controller="MainController">
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+				<div class="container">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="#">Trips</a>
+					</div>
+					<div class="navbar">
+						<ul class="nav navbar-nav">
+							<li><a href="#/">Dash</a></li>
+							<li><a href="#/logout">Log out</a></li>
+						</ul>
+					</div>
+				</div>
+
+				
+			</nav>
+			<div class="trips">
+				<div class="container" ng-view>
+				
+				</div>
+			</div>
+			
+		</div>
+
+		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular-route/angular-route.js"></script>
+		<script src="app/app.js"></script>
+	</body>
+</html>
