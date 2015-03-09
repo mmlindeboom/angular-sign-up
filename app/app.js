@@ -16,14 +16,13 @@ angular.module('App', ['ngRoute'])
 				templateUrl: 'app/templates/logout.html',
 				controller: 'LogoutController'
 			})
-			.when('/401', {
+			.when('/error', {
 				templateUrl: 'app/templates/error.html',
 				controller: 'ErrorController'
 			});
 		$httpProvider.interceptors.push('authInterceptor');
 	})
-	.run(function($rootScope, $location){
-
+	.run(function($rootScope, $location, AUTH_EVENTS){
 	})
 	.constant('API_PATH', {
 		login: 'http://localhost:3000/login',
@@ -38,10 +37,14 @@ angular.module('App', ['ngRoute'])
 		notAuthenticated: 'auth-not-authenticated',
 		notAuthorized: 'auth-not-authorized'
 	})
-	.controller('MainController', function ($scope, $route, $routeParams, $location) {
+	.controller('MainController', function ($scope, $rootScope, $route, $routeParams, $location, ErrorService, AUTH_EVENTS) {
 		$scope.$route = $route;
 		$scope.location = $location;
 		$scope.$routeParams = $routeParams;
+
+		$rootScope.$on(AUTH_EVENTS.loginFailed, function(event, data){
+			ErrorService.handleError(event, data);
+		});
 	})
 	.factory('UserService', function ($http, API_PATH, $window) {
 		this.getCurrentUser = function () {
@@ -57,6 +60,13 @@ angular.module('App', ['ngRoute'])
 		};
 		return this;
 	})
+	.factory('ErrorService', function($location, ErrorController) {
+		this.handleError = function(event, error){
+			$location.path('/error');
+			ErrorController.setErrorState(error, 'Invalid credentials');
+		}
+		return this;
+	})
 	.controller('LoginController', function ($scope, $rootScope, $routeParams, $location, AuthService) {
 		$scope.params = $routeParams;
 		$scope.credentials = {
@@ -70,9 +80,15 @@ angular.module('App', ['ngRoute'])
 			});
 		};
 	})
-	.controller('ErrorController', function($scope, $routeParams){
+	.controller('ErrorController', function($scope, $rootScope, $routeParams, AUTH_EVENTS){
 		$scope.params = $routeParams;
+		$scope.error = 0;
+		$scope.message = 'There was an error';
 
+		$scope.setErrorState = function(error, message) {
+			$scope.error = error;
+			$scope.message = message;
+		}
 	})
 	.controller('LogoutController', function($scope, $location, $window, $routeParams){
 		$scope.params = $routeParams;
@@ -86,15 +102,17 @@ angular.module('App', ['ngRoute'])
 
 		if(!AuthService.isAuthenticated()) {
 			$location.path('/login');
-		}
-		UserService.getCurrentUser().then(function (userData) {
+		} else {
+			UserService.getCurrentUser().then(function (userData) {
 
-			$scope.FirstName = userData.data.FirstName;
-		});
+				$scope.FirstName = userData.data.FirstName;
+			});
+		}
+		
 
 		return this;
 	})
-	.factory('AuthService', function ($http, API_PATH, $window) {
+	.factory('AuthService', function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, $window) {
 		var authService = {};
 		authService.login = function (credentials) {
 			return $http
@@ -108,6 +126,11 @@ angular.module('App', ['ngRoute'])
 				.error(function (data, status, headers, config) {
 					//delete token of login is wrong
 					delete $window.sessionStorage.token;
+
+					if(status === 401) {
+						$rootScope.$broadcast(AUTH_EVENTS.loginFailed, 401);
+					}
+					
 				});
 		};
 		authService.isAuthenticated = function(){
@@ -128,9 +151,6 @@ angular.module('App', ['ngRoute'])
 				return config;
 			},
 			response: function(response) {
-				if(response.status === 401) {
-					$rootScope.$broadcast(AUTH_EVENTS.loginFailed)
-				}
 				return response || $q.when(response);
 			}
 		};
