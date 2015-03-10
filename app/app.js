@@ -60,35 +60,40 @@ angular.module('App', ['ngRoute'])
 		};
 		return this;
 	})
-	.factory('ErrorService', function($location, ErrorController) {
-		this.handleError = function(event, error){
-			$location.path('/error');
-			ErrorController.setErrorState(error, 'Invalid credentials');
-		}
-		return this;
+	.factory('ErrorService', function($location) {
+		var service = {
+			error: {
+				code: '',
+				message: ''
+			}
+		};
+
+		service.handleError = function(event, error){
+			service.error = error;
+		};
+		return service;
 	})
-	.controller('LoginController', function ($scope, $rootScope, $routeParams, $location, AuthService) {
+	.controller('LoginController', function ($scope, $rootScope, $routeParams, $location, AuthService, AUTH_EVENTS, ErrorService) {
 		$scope.params = $routeParams;
 		$scope.credentials = {
 			username: '',
 			password: ''
 		};
-
 		$scope.login = function (credentials) {
+			credentials = $scope.credentials;
 			AuthService.login(credentials).then(function () {
 				$location.path('/dash');
 			});
 		};
+		$scope.$on(AUTH_EVENTS.loginFailed, function(){
+			$scope.error = ErrorService.error;
+		});
 	})
-	.controller('ErrorController', function($scope, $rootScope, $routeParams, AUTH_EVENTS){
-		$scope.params = $routeParams;
-		$scope.error = 0;
-		$scope.message = 'There was an error';
-
-		$scope.setErrorState = function(error, message) {
-			$scope.error = error;
-			$scope.message = message;
-		}
+	.directive('loginError', function(){
+		return {
+			controller: 'LoginController',
+			template: '{{error.message}}'
+		};
 	})
 	.controller('LogoutController', function($scope, $location, $window, $routeParams){
 		$scope.params = $routeParams;
@@ -115,6 +120,7 @@ angular.module('App', ['ngRoute'])
 	.factory('AuthService', function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, $window) {
 		var authService = {};
 		authService.login = function (credentials) {
+
 			return $http
 				.post(API_PATH.login, credentials)
 				.success(function (data, status, headers, config) {
@@ -128,7 +134,7 @@ angular.module('App', ['ngRoute'])
 					delete $window.sessionStorage.token;
 
 					if(status === 401) {
-						$rootScope.$broadcast(AUTH_EVENTS.loginFailed, 401);
+						$rootScope.$broadcast(AUTH_EVENTS.loginFailed, data);
 					}
 					
 				});

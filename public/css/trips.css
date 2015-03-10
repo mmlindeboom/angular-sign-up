@@ -3,4 +3,14 @@ body {
 }
 .trips {
   padding: 40px 15px;
+  margin:0 auto;
+}
+
+.login-form .btn {
+	margin-top:22px;
+}
+
+.login-error-message {
+	margin:10px 0;
+	color:red;
 }

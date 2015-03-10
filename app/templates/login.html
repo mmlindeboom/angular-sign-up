@@ -1,11 +1,19 @@
-<form name="loginForm" ng-controller="LoginController"
-      ng-submit="login(credentials)" novalidate>
-	<label for="username">Username:</label>
-	<input type="text" id="username"
-	     ng-model="credentials.username">
-	<label for="password">Password:</label>
-	<input type="password" id="password"
-	     ng-model="credentials.password">
-	<button type="submit">Login</button>
+
+<h2>Sign in</h2>
+<form name="loginForm clearfix" class="login-form" ng-controller="LoginController" ng-submit="login(credential)" novalidate>
+	<div class="form-group">
+		<label for="username">Email:</label>
+		<input type="text" class="form-control input-lg" id="username" ng-model="credentials.username">
+	</div>
+	<div class="form-group">
+		<label for="password">Password:</label>
+		<input type="password" class="form-control input-lg" id="password" ng-model="credentials.password">
+	<div class="login-error-message has-warning" login-error></p>
+	</div>
+
+	<button class="btn btn-default" type="submit">Login</button>
+
 </form>
+
+
 
