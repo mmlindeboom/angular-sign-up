@@ -11,6 +11,10 @@ module.exports = function ($httpProvider, $routeProvider, $locationProvider) {
 			templateUrl: 'app/templates/login.html',
 			controller: 'LoginController'
 		})
+		.when('/register', {
+			templateUrl: 'app/register/Template.Register.html',
+			controller: 'RegisterController'
+		})
 		.when('/logout', {
 			templateUrl: 'app/templates/logout.html',
 			controller: 'LogoutController'

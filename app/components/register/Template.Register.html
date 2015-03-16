@@ -1,6 +1,5 @@
-
-<h2>Sign in</h2>
-<form name="loginForm clearfix" class="login-form" ng-controller="LoginController" ng-submit="login(credential)" novalidate>
+<h2>Register</h2>
+<form name="registerForm clearfix" class="login-form" ng-controller="RegisterController" ng-submit="register(credential)" novalidate>
 	<div class="form-group">
 		<label for="username">Email:</label>
 		<input type="text" class="form-control input-lg" id="username" ng-model="credentials.username">
@@ -11,9 +10,6 @@
 	<div class="login-error-message has-warning" login-error></p>
 	</div>
 
-	<button class="btn btn-primary" type="submit">Login</button>
+	<button class="btn btn-primary" type="submit">Register</button>
 
 </form>
-<a href="#/register">Register</a>
-
-

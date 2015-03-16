@@ -8,6 +8,7 @@ var config = require('./config'),
 	DashController = require('./dashboard/Controller.Dash'),
 	LogoutController = require('./login/Controller.Logout'),
 	LoginController = require('./login/Controller.Login'),
+	RegisterController = require('./register/Controller.Register'),
 	LoginErrorDirective = require('./login/Directives.Login').error;
 
 angular.module('App', ['ngRoute'])
@@ -16,8 +17,8 @@ angular.module('App', ['ngRoute'])
 	})
 	.constant('API_PATH', {
 		login: 'http://localhost:3000/login',
-		user: 'http://localhost:3000/api/v1/user',
-		event: 'http://localhost:3000/api/v1/event'
+		register: 'http://localhost:3000/register',
+		user: 'http://localhost:3000/api/v1/user'
 	})
 	.constant('AUTH_EVENTS', {
 		loginSuccess: 'auth-login-success',
@@ -25,11 +26,13 @@ angular.module('App', ['ngRoute'])
 		logoutSuccess: 'auth-logout-success',
 		sessionTimeout: 'auth-session-timeout',
 		notAuthenticated: 'auth-not-authenticated',
-		notAuthorized: 'auth-not-authorized'
+		notAuthorized: 'auth-not-authorized',
+		registerSucceed: 'auth-register-success'
 	})
 	.controller('MainController', MainController)
 	.factory('UserService', UserService)
 	.factory('ErrorService', HttpErrorService)
+	.controller('RegisterController', RegisterController)
 	.controller('LoginController', LoginController)
 	.directive('loginError', LoginErrorDirective)
 	.controller('LogoutController', LogoutController)
@@ -39,7 +42,7 @@ angular.module('App', ['ngRoute'])
 
 
 
-},{"./auth/Interceptor.Auth":2,"./auth/Service.Auth":3,"./config":4,"./dashboard/Controller.Dash":5,"./login/Controller.Login":6,"./login/Controller.Logout":7,"./login/Directives.Login":8,"./shared/Controller.Main":9,"./shared/Service.Http_Error":10,"./shared/Service.User":11}],2:[function(require,module,exports){
+},{"./auth/Interceptor.Auth":2,"./auth/Service.Auth":3,"./config":4,"./dashboard/Controller.Dash":5,"./login/Controller.Login":6,"./login/Controller.Logout":7,"./login/Directives.Login":8,"./register/Controller.Register":9,"./shared/Controller.Main":10,"./shared/Service.Http_Error":11,"./shared/Service.User":12}],2:[function(require,module,exports){
 module.exports = function ($rootScope, $q, $window) {
 	return {
 		request: function (config) {
@@ -73,15 +76,32 @@ module.exports = function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, 
 				//delete token of login is wrong
 				delete $window.sessionStorage.token;
 
-				if(status === 401) {
+				if (status === 401) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed, data);
 				}
-				
+
 			});
 	};
-	authService.isAuthenticated = function(){
+	authService.register = function (credentials) {
+		return $http
+			.post(API_PATH.register, credentials)
+			.success(function (data, status, headers, config) {
+				if (status === 200) {
+					debugger;
+					$rootScope.$broadcast(AUTH_EVENTS.registerSucceed, config.data);
+				} 
+			})
+			.error(function (data, status, headers, config) {
+				if (status === 409) {
+					$rootScope.$broadcast(AUTH_EVENTS.loginFailed, data);
+				}
+			});
+	};
+	authService.isAuthenticated = function () {
 		return !!$window.sessionStorage.token;
 	};
+
+
 	return authService;
 };
 },{}],4:[function(require,module,exports){
@@ -97,6 +117,10 @@ module.exports = function ($httpProvider, $routeProvider, $locationProvider) {
 		.when('/login', {
 			templateUrl: 'app/templates/login.html',
 			controller: 'LoginController'
+		})
+		.when('/register', {
+			templateUrl: 'app/register/Template.Register.html',
+			controller: 'RegisterController'
 		})
 		.when('/logout', {
 			templateUrl: 'app/templates/logout.html',
@@ -161,6 +185,25 @@ module.exports = {
 	}
 };
 },{}],9:[function(require,module,exports){
+module.exports = function($scope, $rootScope, $location, AuthService, AUTH_EVENTS) {
+
+	$scope.credentials = {
+		username: "",
+		password: ""
+	};
+
+	$scope.register = function (credentials) {
+		credentials = $scope.credentials;
+		AuthService.register(credentials);
+	};
+
+	$rootScope.$on(AUTH_EVENTS.registerSucceed, function(event, data){
+		AuthService.login(data).then(function(){
+			$location.path('/dash');
+		});
+	});
+};
+},{}],10:[function(require,module,exports){
 module.exports = function ($scope, $rootScope, $route, $routeParams, $location, ErrorService, AUTH_EVENTS) {
 	$scope.$route = $route;
 	$scope.location = $location;
@@ -171,7 +214,7 @@ module.exports = function ($scope, $rootScope, $route, $routeParams, $location, 
 	});
 };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = function($location) {
 	var service = {
 		error: {
@@ -185,7 +228,7 @@ module.exports = function($location) {
 	};
 	return service;
 };
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 module.exports = function ($http, API_PATH, $window) {
 	this.getCurrentUser = function () {
 		var req = {

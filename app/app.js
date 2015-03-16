@@ -7,6 +7,7 @@ var config = require('./config'),
 	DashController = require('./dashboard/Controller.Dash'),
 	LogoutController = require('./login/Controller.Logout'),
 	LoginController = require('./login/Controller.Login'),
+	RegisterController = require('./register/Controller.Register'),
 	LoginErrorDirective = require('./login/Directives.Login').error;
 
 angular.module('App', ['ngRoute'])
@@ -15,8 +16,8 @@ angular.module('App', ['ngRoute'])
 	})
 	.constant('API_PATH', {
 		login: 'http://localhost:3000/login',
-		user: 'http://localhost:3000/api/v1/user',
-		event: 'http://localhost:3000/api/v1/event'
+		register: 'http://localhost:3000/register',
+		user: 'http://localhost:3000/api/v1/user'
 	})
 	.constant('AUTH_EVENTS', {
 		loginSuccess: 'auth-login-success',
@@ -24,11 +25,13 @@ angular.module('App', ['ngRoute'])
 		logoutSuccess: 'auth-logout-success',
 		sessionTimeout: 'auth-session-timeout',
 		notAuthenticated: 'auth-not-authenticated',
-		notAuthorized: 'auth-not-authorized'
+		notAuthorized: 'auth-not-authorized',
+		registerSucceed: 'auth-register-success'
 	})
 	.controller('MainController', MainController)
 	.factory('UserService', UserService)
 	.factory('ErrorService', HttpErrorService)
+	.controller('RegisterController', RegisterController)
 	.controller('LoginController', LoginController)
 	.directive('loginError', LoginErrorDirective)
 	.controller('LogoutController', LogoutController)
