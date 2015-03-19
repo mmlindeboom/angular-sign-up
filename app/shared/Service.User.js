@@ -1,4 +1,7 @@
-module.exports = function ($http, API_PATH, $window) {
+'use strict';
+
+angular.module('App.UserService', [])
+.factory('UserService', function ($http, API_PATH, $window) {
 	this.getCurrentUser = function () {
 		var req = {
 			method: 'GET',
@@ -11,4 +14,4 @@ module.exports = function ($http, API_PATH, $window) {
 		return $http(req);
 	};
 	return this;
-}
+});
