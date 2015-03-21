@@ -1,6 +1,6 @@
 'use strict';
 
-app.module('App.HttpService', [])
+angular.module('app.HttpService', [])
 	.factory('HttpService', function ($location) {
 		var service = {
 			error: {

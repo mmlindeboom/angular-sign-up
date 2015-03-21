@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('App.AuthService', [])
+angular.module('app.AuthService', [])
 	.factory('AuthService', function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, $window) {
 		var authService = {};
 		authService.login = function (credentials) {

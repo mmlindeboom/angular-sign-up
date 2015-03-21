@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('App.authInterceptor', [])
-	.interceptor('authInterceptor', function ($rootScope, $q, $window) {
+angular.module('app.authInterceptor', [])
+	.factory('authInterceptor', function ($rootScope, $q, $window) {
 		return {
 			request: function (config) {
 				config.headers = config.headers || {};

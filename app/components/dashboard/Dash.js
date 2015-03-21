@@ -1,5 +1,12 @@
 'use strict';
-angular.module('App.DashController', [])
+
+angular.module('app.DashView', ['ngRoute'])
+	.config(function($routeProvider){
+		$routeProvider.when('/dash', {
+			templateUrl: 'app/templates/dash.html',
+			controller: 'DashController'
+		});
+	})
 	.controller('DashController', function ($scope, $routeParams, $location, UserService, AuthService) {
 		$scope.params = $routeParams;
 		$scope.FirstName = null;
