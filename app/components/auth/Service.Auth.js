@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app.AuthService', [])
-	.factory('AuthService', function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, $window) {
+	.service('AuthService', function ($http, $rootScope, API_PATH, AUTH_EVENTS, $location, $window) {
 		var authService = {};
 		authService.login = function (credentials) {
 			return $http
@@ -15,7 +15,6 @@ angular.module('app.AuthService', [])
 				.error(function (data, status, headers, config) {
 					//delete token of login is wrong
 					delete $window.sessionStorage.token;
-
 					if (status === 401) {
 						$rootScope.$broadcast(AUTH_EVENTS.loginFailed, data);
 					}
@@ -32,7 +31,7 @@ angular.module('app.AuthService', [])
 				})
 				.error(function (data, status, headers, config) {
 					if (status === 409) {
-						$rootScope.$broadcast(AUTH_EVENTS.loginFailed, data);
+						$rootScope.$broadcast(AUTH_EVENTS.registerFail, data);
 					}
 				});
 		};

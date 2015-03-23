@@ -1,21 +1,22 @@
-
 angular.module('app', [
 		'ngRoute',
+		'app._',
 		'app.authInterceptor',
 		'app.AuthService',
-		'app.HttpService',
 		'app.DashView',
 		'app.LoginView',
 		'app.LogoutView',
 		'app.RegisterView',
-		'app.UserService',
-		'app.HttpService'
+		'app.UserService'
 	])
-	.config(function ($httpProvider, $routeProvider, $locationProvider) {
-		$routeProvider
-			.when('/', {
-				redirectTo: '/dash'
-			});
+	/**
+	 * Instantiate 3rd party libs after bootstrap
+	 */
+	.run(function (_) {})
+	.config(function ($httpProvider, $routeProvider) {
+		$routeProvider.otherwise({
+			redirectTo: '/'
+		})
 		$httpProvider.interceptors.push('authInterceptor');
 	})
 	.constant('API_PATH', {
@@ -31,6 +32,5 @@ angular.module('app', [
 		notAuthenticated: 'auth-not-authenticated',
 		notAuthorized: 'auth-not-authorized',
 		registerSucceed: 'auth-register-success',
-		httpError: 'auth-http-error'
+		registerFail: 'auth-register-error'
 	});
-

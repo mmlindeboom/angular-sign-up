@@ -12,7 +12,7 @@ angular.module('app.DashView', ['ngRoute'])
 		$scope.FirstName = null;
 
 		if (!AuthService.isAuthenticated()) {
-			$location.path('/login');
+			$location.path('/');
 		} else {
 			UserService.getCurrentUser().then(function (userData) {
 

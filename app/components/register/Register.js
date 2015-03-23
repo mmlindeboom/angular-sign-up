@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('app.RegisterView', ['ngRoute'])
-	.config(function($routeProvider){
-		$routeProvider.when('/register', {
+	.config(function ($routeProvider) {
+		$routeProvider.when('/', {
 			templateUrl: 'app/components/register/Template.Register.html',
 			controller: 'RegisterController'
 		});
@@ -18,18 +18,18 @@ angular.module('app.RegisterView', ['ngRoute'])
 			AuthService.register(credentials);
 		};
 
-		$rootScope.$on(AUTH_EVENTS.registerSucceed, function (event, data) {
+		$scope.$on(AUTH_EVENTS.registerSucceed, function (event, data) {
 			AuthService.login(data).then(function () {
 				$location.path('/dash');
 			});
 		});
+		$scope.$on(AUTH_EVENTS.registerFail, function (event, error) {
+			$scope.error = error;
+		});
 	})
-	.directive('register-error', {
-		error: function () {
-			return {
-				controller: 'RegisterController',
-				template: '{{error.message}}',
-				link: function (scope) {}
-			};
-		}
+	.directive('registerError', function () {
+		return {
+			controller: 'RegisterController',
+			template: '{{error.message}}',
+		};
 	});

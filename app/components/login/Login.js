@@ -1,35 +1,59 @@
 'use strict';
 
 angular.module('app.LoginView', ['ngRoute'])
-	.config(function($routeProvider) {
-		$routeProvider.when('/login', {
-			templateUrl: 'app/templates/login.html',
-			controller: 'LoginController'
-		});
-	})
-	.controller('LoginController', function ($scope, $rootScope, $routeParams, $location, AuthService, AUTH_EVENTS, HttpService) {
+	.controller('LoginController', function ($scope, $rootScope, $routeParams, $location, AuthService, AUTH_EVENTS) {
 		$scope.params = $routeParams;
 		$scope.credentials = {
 			username: '',
 			password: ''
 		};
+		$scope.authenticated = AuthService.isAuthenticated();
 
 		$scope.login = function (credentials) {
 			credentials = $scope.credentials;
 			AuthService.login(credentials).then(function () {
 				$location.path('/dash');
+				$scope.authenticated = AuthService.isAuthenticated();
+				$scope.error = {};
+				
 			});
 		};
-		$scope.$on(AUTH_EVENTS.loginFailed, function () {
-			$scope.error = HttpService.error;
+		$scope.$on(AUTH_EVENTS.loginFailed, function (event, error) {
+			$scope.error = error;
+		});
+		$scope.$on(AUTH_EVENTS.logoutSuccess, function(){
+			$scope.authenticated = AuthService.isAuthenticated();
 		});
 	})
-	.directive({
-		error: function () {
-			return {
-				controller: 'LoginController',
-				template: '{{error.message}}',
-				link: function (scope) {}
+	.directive('loginForm', function ($compile) {
+		var getTemplate = function(authenticated){
+				if(authenticated) {
+					return '<ul class="nav navbar-nav"><li><a href="#/logout">Logout</a></li></ul>';
+				} else {
+					return '<div ng-include src="\'app/templates/login.html\'" />';
+				}
 			};
-		}
+		return {
+			controller: 'LoginController',
+			link: function(scope, element) {
+				scope.$watch('authenticated', function(newValue, oldValue){
+					element.html(getTemplate(newValue));
+					$compile(element.contents())(scope);
+				});
+			}
+		};
+	})
+	.directive('loginError', function (_) {
+		return {
+			controller: 'LoginController',
+			link: function (scope) {
+				scope.$watch('error', function (newError, noError) {
+					if(_.isObject(newError)){
+						if (!_.isUndefined(newError.message)) {
+							alert(newError.message);
+						}
+					}
+				});
+			}
+		};
 	});

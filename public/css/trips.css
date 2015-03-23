@@ -6,8 +6,21 @@ body {
   margin:0 auto;
 }
 
+
+.login-form {
+	width:375px;
+	margin:10px 0;
+}
+.login-form .form-group {
+	float:left;
+	margin: 0 10px 0 0;
+}
+.login-form .form-group label {
+	color:#fff;
+}
 .login-form .btn {
-	margin-top:22px;
+	float:left;
+	margin-top:24px;
 }
 
 .login-error-message {
