@@ -13,16 +13,14 @@ angular.module('app.LoginView', ['ngRoute'])
 			credentials = $scope.credentials;
 			AuthService.login(credentials).then(function () {
 				$location.path('/dash');
-				$scope.authenticated = AuthService.isAuthenticated();
-				$scope.error = {};
-				
+				$scope.authenticated = true;
 			});
 		};
 		$scope.$on(AUTH_EVENTS.loginFailed, function (event, error) {
 			$scope.error = error;
 		});
 		$scope.$on(AUTH_EVENTS.logoutSuccess, function(){
-			$scope.authenticated = AuthService.isAuthenticated();
+			$scope.authenticated = false;
 		});
 	})
 	.directive('loginForm', function ($compile) {
@@ -35,6 +33,7 @@ angular.module('app.LoginView', ['ngRoute'])
 			};
 		return {
 			controller: 'LoginController',
+			replace: true,
 			link: function(scope, element) {
 				scope.$watch('authenticated', function(newValue, oldValue){
 					element.html(getTemplate(newValue));
