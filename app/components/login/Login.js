@@ -13,7 +13,10 @@ angular.module('app.LoginView', ['ngRoute'])
 			credentials = $scope.credentials;
 			AuthService.login(credentials).then(function () {
 				$location.path('/dash');
-				$scope.authenticated = true;
+
+				//Uses parent because we're in a promise scope(?) Need to confirm.
+				$scope.$parent.authenticated = AuthService.isAuthenticated();
+
 			});
 		};
 		$scope.$on(AUTH_EVENTS.loginFailed, function (event, error) {
@@ -35,6 +38,7 @@ angular.module('app.LoginView', ['ngRoute'])
 			controller: 'LoginController',
 			replace: true,
 			link: function(scope, element) {
+
 				scope.$watch('authenticated', function(newValue, oldValue){
 					element.html(getTemplate(newValue));
 					$compile(element.contents())(scope);

@@ -7,9 +7,13 @@ angular.module('app.LogoutView', ['ngRoute'])
 			controller: 'LogoutController'
 		});
 	})
-	.controller('LogoutController', function ($scope, $rootScope, $location, $window, $routeParams, AUTH_EVENTS) {
+	.controller('LogoutController', function ($scope, $rootScope, $location, $window, $timeout, $routeParams, AUTH_EVENTS) {
 		$scope.params = $routeParams;
 		$rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
 		delete $window.sessionStorage.token;
 		delete $window.sessionStorage.email;
+
+		$timeout(function(){
+			$location.path('/');
+		}, 800)
 	});
