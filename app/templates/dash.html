@@ -1,6 +1,25 @@
-<div ng-controller="DashController">
+<div>
 	<h1>Hi {{FirstName}}!</h1>
-
+	<div class="panel panel-default">
+		<p class="panel-heading">Your basics:</p>
+		<div class="panel-body">
+			<ul>
+				<li>Member since: {{CreatedAt}}</li>
+			</ul>
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<p class="panel-heading">Your Events:</p>
+		<div class="panel-body">
+			<ul>
+				<li ng-repeat="event in events">
+					<a href="#/event/{{event.EventId}}">{{event.Title}}</a> - <em><event-owner></event-owner></em>
+				</li>
+			</ul>
+		</div>
+		
+	</div>
+	
 	<div></div>
 </div>
 

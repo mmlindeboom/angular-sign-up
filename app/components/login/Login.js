@@ -7,6 +7,7 @@ angular.module('app.LoginView', ['ngRoute'])
 			username: '',
 			password: ''
 		};
+		$scope.error = {};
 		$scope.authenticated = AuthService.isAuthenticated();
 
 		$scope.login = function (credentials) {
@@ -49,6 +50,9 @@ angular.module('app.LoginView', ['ngRoute'])
 	.directive('loginError', function (_) {
 		return {
 			controller: 'LoginController',
+			scope: function(){
+				debugger;
+			},
 			link: function (scope) {
 				scope.$watch('error', function (newError, noError) {
 					if(_.isObject(newError)){

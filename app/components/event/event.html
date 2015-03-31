@@ -1,0 +1,17 @@
+<div>
+	<h2>{{event.Title}}</h2>
+	<div class="panel panel-default">
+		<div class="panel-heading">Details</div>
+		<div class="panel-body">
+			<ul>
+				<li>Created at: <event-detail type="event.CreatedAt"></event-detail></li>
+			</ul>
+		</div>
+	</div>
+	<div class="panel panel-danger ng-hide" ng-hide="noEvent">
+		<div class="panel-heading">{{error.status}}</div>
+		<div class="panel-body">
+			{{error.message}}
+		</div>
+	</div>
+</div>

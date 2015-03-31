@@ -8,11 +8,14 @@ angular.module('app.RegisterView', ['ngRoute'])
 		});
 	})
 	.controller('RegisterController', function ($scope, $rootScope, $location, AuthService, AUTH_EVENTS) {
+		if(AuthService.isAuthenticated()){
+			$location.path('/dash');
+		}
 		$scope.credentials = {
 			username: '',
 			password: ''
 		};
-
+		$scope.error = {};
 		$scope.register = function (credentials) {
 			credentials = $scope.credentials;
 			AuthService.register(credentials);
@@ -24,12 +27,12 @@ angular.module('app.RegisterView', ['ngRoute'])
 			});
 		});
 		$scope.$on(AUTH_EVENTS.registerFail, function (event, error) {
-			$scope.error = error;
+			$scope.registerError = error;
 		});
 	})
 	.directive('registerError', function () {
 		return {
 			controller: 'RegisterController',
-			template: '{{error.message}}',
+			template: '{{registerError.message}}',
 		};
 	});

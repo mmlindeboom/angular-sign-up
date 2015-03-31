@@ -5,10 +5,7 @@ angular.module('app.UserService', [])
 		this.getCurrentUser = function () {
 			var req = {
 				method: 'GET',
-				url: API_PATH.user,
-				params: {
-					username: $window.sessionStorage.email
-				}
+				url: API_PATH.userProfile
 			};
 
 			return $http(req);
