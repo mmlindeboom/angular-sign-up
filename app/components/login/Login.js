@@ -32,7 +32,7 @@ angular.module('app.LoginView', ['ngRoute'])
 				if(authenticated) {
 					return '<ul class="nav navbar-nav"><li><a href="#/logout">Logout</a></li></ul>';
 				} else {
-					return '<div ng-include src="\'app/templates/login.html\'" />';
+					return '<div ng-include src="\'app/template/login.html\'" />';
 				}
 			};
 		return {
@@ -50,9 +50,6 @@ angular.module('app.LoginView', ['ngRoute'])
 	.directive('loginError', function (_) {
 		return {
 			controller: 'LoginController',
-			scope: function(){
-				debugger;
-			},
 			link: function (scope) {
 				scope.$watch('error', function (newError, noError) {
 					if(_.isObject(newError)){

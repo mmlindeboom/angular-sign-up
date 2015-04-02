@@ -3,7 +3,7 @@
 angular.module('app.DashView', ['ngRoute'])
 	.config(function($routeProvider){
 		$routeProvider.when('/dash', {
-			templateUrl: 'app/templates/dash.html',
+			templateUrl: 'app/template/dash.html',
 			controller: 'DashController'
 		});
 	})

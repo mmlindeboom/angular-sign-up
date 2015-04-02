@@ -27,12 +27,12 @@ angular.module('app.RegisterView', ['ngRoute'])
 			});
 		});
 		$scope.$on(AUTH_EVENTS.registerFail, function (event, error) {
-			$scope.registerError = error;
+			$scope.error = error;
 		});
 	})
 	.directive('registerError', function () {
 		return {
 			controller: 'RegisterController',
-			template: '{{registerError.message}}',
+			template: '{{error.message}}',
 		};
 	});

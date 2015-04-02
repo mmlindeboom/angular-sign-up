@@ -2,6 +2,7 @@ angular.module('app', [
 		'ngRoute',
 		'app._',
 		'app.moment',
+		'ui.bootstrap.datepicker',
 		'app.authInterceptor',
 		'app.AuthService',
 		'app.DashView',

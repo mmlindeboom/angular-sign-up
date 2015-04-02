@@ -6,6 +6,7 @@ $script([
 	'app/app.js',
 	'app/libs/ng.lodash.js',
 	'app/libs/ng.moment.js',
+	'app/libs/ui-bootstrap-date-picker.js',
 	'app/shared/Service.User.js',
 	'app/shared/Service.Event.js',
 	'app/components/auth/Service.Auth.js',
