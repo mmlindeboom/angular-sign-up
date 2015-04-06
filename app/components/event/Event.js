@@ -19,37 +19,35 @@ angular.module('app.EventView', ['ngRoute'])
 		//initialize
 		EventService.getEvent($scope.params.id).success(function(details){
 				$scope.details = details;
+				$scope.dt = $scope.details.Date || new Date();
+
 			}).error(function(error){
 				$scope.noEvent = true;
 				$scope.error = error;
 			});
-
 		$scope.open = function($event) {
 			$event.preventDefault();
 			$event.stopPropagation();
 
 			$scope.opened = true;
 		 };
-		$scope.dt = new Date();
+
 		$scope.setDate = function($event) {
-			EventServices.setEventDate($scope.dt).success(function(){
-				
+			EventService.setDate($scope.params.id, $scope.dt).then(function(response){
+				//TODO confirm success;
 			});
 		}
 		this.checkDetail = function(detail){
 			$scope.$watch(detail, function(newDetail){
 				$scope.detail = newDetail;
 			});
-			if($scope[detail] === undefined) {
-				switch(detail) {
-					case 'date': 
-						$scope.isEmpty = true;
-						$scope[detail] = {
-							header: 'Date',
-						}
-						$scope.dt = new Date();
-						break;
-				}
+			switch(detail) {
+				case 'Date': 
+					$scope.isEmpty = true;
+					$scope[detail] = {
+						header: 'Date',
+					}
+				break;
 			}
 		}
 

@@ -7,8 +7,9 @@ angular.module('app.authInterceptor', [])
 				config.headers = config.headers || {};
 				if ($window.sessionStorage.token) {
 					config.headers = {
+						'Content-type': 'application/json',
 						'x-access-token': $window.sessionStorage.token,
-						'x-key': $window.sessionStorage.email
+						'x-key': $window.sessionStorage.email,
 					};
 				}
 				return config;

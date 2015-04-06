@@ -10,5 +10,8 @@ angular.module('app.EventService', [])
 
 			return $http(req);
 		};
+		this.setDate = function(id, data){
+			return $http.put([API_PATH.event, '/', id].join(''), { Date: data });
+		}
 		return this;
 	});
